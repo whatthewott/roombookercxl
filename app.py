@@ -29,15 +29,18 @@ def book():
         start_time = request.form["start_time"]
         end_time = request.form["end_time"]
         event_type = request.form["event_type"]
-        
+
+        # Validate inputs
         conn = get_db()
         cur = conn.cursor()
 
+        # check if the room exists
         cur.execute("SELECT * FROM rooms WHERE building=%s AND room_number=%s", (building, room))
         if not cur.fetchone():
             conn.close()
             return "Room not found", 400
 
+        # Check for overlapping bookings
         cur.execute("""
             SELECT * FROM bookings
             WHERE building = %s AND room_number = %s AND date = %s
@@ -46,18 +49,27 @@ def book():
             )
         """, (building, room, date, start_time, end_time))
 
+        # If there's an overlapping booking, return an error
         if cur.fetchone():
             conn.close()
             return "This room is already booked at that date and time.", 409
 
+        # If no overlap, insert the new booking
         cur.execute("""
             INSERT INTO bookings (date, building, room_number, employer, event_type, start_time, end_time)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, (date, building, room, employer, event_type, start_time, end_time))
+
         conn.commit()
         conn.close()
         return redirect(url_for("index"))
-    return render_template("book.html")
+    
+    # GET request: fetch buildings for dropdown
+    cur.execute("SELECT DISTINCT building FROM rooms ORDER BY building")
+    buildings = [row[0] for row in cur.fetchall()]
+    conn.close()
+
+    return render_template("book.html", buildings=buildings)
 
 @app.route("/edit/<int:booking_id>", methods=["GET", "POST"])
 def edit(booking_id):

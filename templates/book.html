@@ -12,14 +12,14 @@
       </div>
     </div>
     <div class="mb-3">
-      <label for="start_time" class=""form-label>Start Time</label>
+      <label for="start_time" class="form-label">Start Time</label>
       <input type="time" class="form-control" id="start_time" name="start_time" step="300" required>
       <div class="invalid-feedback">
         Please select a start time.
       </div>
     </div>
     <div class="mb-3">
-      <label for="end_time" class=""form-label>End Time</label>
+      <label for="end_time" class="form-label">End Time</label>
       <input type="time" class="form-control" id="end_time" name="end_time" step="300" required>
       <div class="invalid-feedback">
         Please select an end time.
@@ -27,10 +27,16 @@
     </div>
     <div class="mb-3">
       <label for="building" class="form-label">Building</label>
-      <input type="text" class="form-control" id="building" name="building" required>
+      <select class="form-select" id="building" name="building" required>
+        <option value="" disabled selected>Select a building</option>
+        {% for b in buildings %}
+          <option value="{{ b }}">{{ b }}</option>
+        {% endfor %}
+      </select>
       <div class="invalid-feedback">
-        Please enter a building name.
+        Please select a building.
       </div>
+    </div>
     </div>
     <div class="mb-3">
       <label for="room_number" class="form-label">Room Number</label>
