@@ -12,6 +12,20 @@
       </div>
     </div>
     <div class="mb-3">
+      <label for="start_time" class=""form-label>Start Time</label>
+      <input type="start_time" class="form-control" id="start_time" name="start_time" required>
+      <div class="invalid-feedback">
+        Please select a start time.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="end_time" class=""form-label>End Time</label>
+      <input type="end_time" class="form-control" id="end_time" name="end_time" required>
+      <div class="invalid-feedback">
+        Please select an end time.
+      </div>
+    </div>
+    <div class="mb-3">
       <label for="building" class="form-label">Building</label>
       <input type="text" class="form-control" id="building" name="building" required>
       <div class="invalid-feedback">
@@ -30,6 +44,13 @@
       <input type="text" class="form-control" id="employer" name="employer" required>
       <div class="invalid-feedback">
         Please enter the employer name.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="event_type" class=""form-label>Event Type</label>
+      <input type="event_type" class="form-control" id="event_type" name="event_type" required>
+      <div class="invalid-feedback">
+        Please enter an event type.
       </div>
     </div>
     <button type="submit" class="btn btn-success">Submit</button>

@@ -26,6 +26,9 @@ def book():
         building = request.form["building"]
         room = request.form["room_number"]
         employer = request.form["employer"]
+        start_time = request.form["start_time"]
+        end_time = request.form["end_time"]
+        event_type = request.form["event_type"]
         conn = get_db()
         cur = conn.cursor()
 
@@ -34,14 +37,22 @@ def book():
             conn.close()
             return "Room not found", 400
 
-        cur.execute("SELECT * FROM bookings WHERE date=%s AND building=%s AND room_number=%s",
-                    (date, building, room))
+        cur.execute("""
+            SELECT * FROM bookings
+            WHERE building = %s AND room_number = %s AND date = %s
+            AND (
+                (%s < end_time AND %s > start_time)  -- Overlap check
+            )
+        """, (building, room, date, start_time, end_time))
+
         if cur.fetchone():
             conn.close()
-            return "Room already booked", 409
+            return "This room is already booked at that date and time.", 409
 
-        cur.execute("INSERT INTO bookings (date, building, room_number, employer) VALUES (%s, %s, %s, %s)",
-                    (date, building, room, employer))
+        cur.execute("""
+            INSERT INTO bookings (date, building, room_number, employer, event_type, start_time, end_time)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (date, building, room, employer, event_type, start_time, end_time))
         conn.commit()
         conn.close()
         return redirect(url_for("index"))
