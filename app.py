@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, abort
 import psycopg2
 import os
 
@@ -74,6 +74,35 @@ def delete(booking_id):
     conn.commit()
     conn.close()
     return redirect(url_for("index"))
+
+@app.route("/admin/sql", methods=["GET", "POST"])
+def run_sql():
+    # Optional: Simple passcode check (change "secret123" to something secure)
+    if request.method == "POST":
+        passcode = request.form.get("passcode")
+        if passcode != "secret123":
+            abort(403)
+
+        query = request.form.get("query")
+        try:
+            conn = get_db()
+            cur = conn.cursor()
+            cur.execute(query)
+            conn.commit()
+            conn.close()
+            return "Query executed successfully!"
+        except Exception as e:
+            return f"Error: {str(e)}", 500
+
+    # Render a simple HTML form
+    return '''
+        <form method="post">
+            Passcode: <input type="password" name="passcode"><br>
+            SQL Query:<br>
+            <textarea name="query" rows="5" cols="80"></textarea><br>
+            <button type="submit">Run</button>
+        </form>
+    '''
 
 if __name__ == "__main__":
     app.run(debug=True)
