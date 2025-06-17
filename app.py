@@ -65,6 +65,8 @@ def book():
         return redirect(url_for("index"))
     
     # GET request: fetch buildings for dropdown
+    conn = get_db()
+    cur = conn.cursor()
     cur.execute("SELECT DISTINCT building FROM rooms ORDER BY building")
     buildings = [row[0] for row in cur.fetchall()]
     conn.close()
