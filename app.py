@@ -77,7 +77,7 @@ def edit(booking_id):
     conn.close()
     return render_template("edit.html", booking=booking)
 
-@app.route("/delete/<int:booking_id>")
+@app.route("/delete/<int:booking_id>, methods=['POST']")
 def delete(booking_id):
     conn = get_db()
     cur = conn.cursor()
