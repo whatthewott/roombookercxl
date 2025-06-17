@@ -24,7 +24,7 @@ def book():
     if request.method == "POST":
         date = request.form["date"]
         building = request.form["building"]
-        room = request.form["room"]
+        room = request.form["room_number"]
         employer = request.form["employer"]
         conn = get_db()
         cur = conn.cursor()
