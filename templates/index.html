@@ -1,18 +1,38 @@
 
-<!DOCTYPE html>
-<html>
-<head><title>Bookings</title></head>
-<body>
-<h1>All Bookings</h1>
-<a href="/book">Book a Room</a>
-<table border="1">
-<tr><th>Date</th><th>Building</th><th>Room</th><th>Employer</th><th>Actions</th></tr>
-{% for b in bookings %}
-<tr>
-<td>{{ b[1] }}</td><td>{{ b[2] }}</td><td>{{ b[3] }}</td><td>{{ b[4] }}</td>
-<td><a href="/edit/{{ b[0] }}">Edit</a> | <a href="/delete/{{ b[0] }}">Delete</a></td>
-</tr>
-{% endfor %}
-</table>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+  <h2 class="mb-4">Current Bookings</h2>
+  {% if bookings %}
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Date</th>
+        <th>Building</th>
+        <th>Room</th>
+        <th>Employer</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+      <tr>
+        <td>{{ booking[1] }}</td>
+        <td>{{ booking[2] }}</td>
+        <td>{{ booking[3] }}</td>
+        <td>{{ booking[4] }}</td>
+        <td>
+          <form action="/delete/{{ booking[0] }}" method="POST" onsubmit="return confirm('Delete this booking?');">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>No bookings found.</p>
+  {% endif %}
+{% endblock %}
+
+

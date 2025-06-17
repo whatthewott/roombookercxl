@@ -1,15 +1,56 @@
 
-<!DOCTYPE html>
-<html>
-<head><title>Book Room</title></head>
-<body>
-<h1>Book a Room</h1>
-<form method="post">
-Date: <input name="date" type="date"><br>
-Building: <input name="building"><br>
-Room: <input name="room"><br>
-Employer: <input name="employer"><br>
-<input type="submit" value="Book">
-</form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+  <h2 class="mb-4">Book a Room</h2>
+  <form method="POST" class="needs-validation" novalidate>
+    <div class="mb-3">
+      <label for="date" class="form-label">Date</label>
+      <input type="date" class="form-control" id="date" name="date" required>
+      <div class="invalid-feedback">
+        Please select a date.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="building" class="form-label">Building</label>
+      <input type="text" class="form-control" id="building" name="building" required>
+      <div class="invalid-feedback">
+        Please enter a building name.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="room_number" class="form-label">Room Number</label>
+      <input type="text" class="form-control" id="room_number" name="room_number" required>
+      <div class="invalid-feedback">
+        Please enter a room number.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="employer" class="form-label">Employer</label>
+      <input type="text" class="form-control" id="employer" name="employer" required>
+      <div class="invalid-feedback">
+        Please enter the employer name.
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+
+  <script>
+    // Bootstrap form validation
+    (() => {
+      'use strict'
+      const forms = document.querySelectorAll('.needs-validation')
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+  </script>
+{% endblock %}
+
+
