@@ -57,7 +57,7 @@
   </form>
 
   <script>
-    // Bootstrap form validation
+      // Bootstrap form validation
     (() => {
       'use strict'
       const forms = document.querySelectorAll('.needs-validation')
@@ -72,21 +72,40 @@
       })
     })();
 
-    // Autofill end time as 1 hour after start time
-    document.getElementById("start_time").addEventListener("change", function () {
-      const start = this.value;
-      if (!start) return;
+    // Round a time string "HH:MM" to nearest 5 minutes
+    function roundToFiveMinutes(timeStr) {
+      if (!timeStr) return timeStr;
+      let [hours, minutes] = timeStr.split(":").map(Number);
+      minutes = Math.round(minutes / 5) * 5;
+      if (minutes === 60) {
+        minutes = 0;
+        hours = (hours + 1) % 24;
+      }
+      const pad = (n) => n.toString().padStart(2, "0");
+      return `${pad(hours)}:${pad(minutes)}`;
+    }
 
-      const [hours, minutes] = start.split(":").map(Number);
-      let endHour = hours + 1;
-      let endMinute = minutes;
+    // Snap start_time and autofill end_time
+    const startInput = document.getElementById("start_time");
+    const endInput = document.getElementById("end_time");
 
-      if (endHour >= 24) endHour -= 24;
+    startInput.addEventListener("change", () => {
+      startInput.value = roundToFiveMinutes(startInput.value);
 
-      const pad = (n) => n.toString().padStart(2, '0');
-      const end = `${pad(endHour)}:${pad(endMinute)}`;
-      document.getElementById("end_time").value = end;
+      // Autofill end_time as 1 hour after start_time
+      if (startInput.value) {
+        const [h, m] = startInput.value.split(":").map(Number);
+        let endHour = (h + 1) % 24;
+        const pad = (n) => n.toString().padStart(2, "0");
+        endInput.value = `${pad(endHour)}:${pad(m)}`;
+      }
     });
+
+    // Snap end_time to nearest 5 minutes as well
+    endInput.addEventListener("change", () => {
+      endInput.value = roundToFiveMinutes(endInput.value);
+    });
+
   </script>
 {% endblock %}
 
