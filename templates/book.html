@@ -13,14 +13,14 @@
     </div>
     <div class="mb-3">
       <label for="start_time" class=""form-label>Start Time</label>
-      <input type="time" class="form-control" id="start_time" name="start_time" required>
+      <input type="time" class="form-control" id="start_time" name="start_time" step="300" required>
       <div class="invalid-feedback">
         Please select a start time.
       </div>
     </div>
     <div class="mb-3">
       <label for="end_time" class=""form-label>End Time</label>
-      <input type="time" class="form-control" id="end_time" name="end_time" required>
+      <input type="time" class="form-control" id="end_time" name="end_time" step="300" required>
       <div class="invalid-feedback">
         Please select an end time.
       </div>
@@ -70,7 +70,23 @@
           form.classList.add('was-validated')
         }, false)
       })
-    })()
+    })();
+
+    // Autofill end time as 1 hour after start time
+    document.getElementById("start_time").addEventListener("change", function () {
+      const start = this.value;
+      if (!start) return;
+
+      const [hours, minutes] = start.split(":").map(Number);
+      let endHour = hours + 1;
+      let endMinute = minutes;
+
+      if (endHour >= 24) endHour -= 24;
+
+      const pad = (n) => n.toString().padStart(2, '0');
+      const end = `${pad(endHour)}:${pad(endMinute)}`;
+      document.getElementById("end_time").value = end;
+    });
   </script>
 {% endblock %}
 
