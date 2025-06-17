@@ -1,0 +1,18 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Bookings</title></head>
+<body>
+<h1>All Bookings</h1>
+<a href="/book">Book a Room</a>
+<table border="1">
+<tr><th>Date</th><th>Building</th><th>Room</th><th>Employer</th><th>Actions</th></tr>
+{% for b in bookings %}
+<tr>
+<td>{{ b[1] }}</td><td>{{ b[2] }}</td><td>{{ b[3] }}</td><td>{{ b[4] }}</td>
+<td><a href="/edit/{{ b[0] }}">Edit</a> | <a href="/delete/{{ b[0] }}">Delete</a></td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>
