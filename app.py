@@ -29,6 +29,7 @@ def book():
         start_time = request.form["start_time"]
         end_time = request.form["end_time"]
         event_type = request.form["event_type"]
+        
         conn = get_db()
         cur = conn.cursor()
 
