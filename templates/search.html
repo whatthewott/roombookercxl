@@ -53,7 +53,7 @@
         {% for room in rooms %}
         <tr>
             <td>{{ room[1] }}</td> <!-- building -->
-            <td>{{ room[0] }}</td> <!-- room_number -->
+            <td>{{ room[2] }}</td> <!-- room_number -->
             <td>
             <span class="{{ 'text-success' if room[2]|lower == 't' else 'text-danger' }}">
                 {{ 'Yes' if room[2]|lower == 't' else 'No' }}
