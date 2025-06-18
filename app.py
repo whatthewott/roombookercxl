@@ -135,7 +135,7 @@ def run_sql():
         </form>
     '''
 
-@app.route("/toggle_confirm/<string:building>/<int:room_number>", methods=["POST"])
+@app.route("/toggle_confirm/<string:building>/<string:room_number>", methods=["POST"])
 def toggle_confirm(building, room_number):
     conn = get_db()
     cur = conn.cursor()
