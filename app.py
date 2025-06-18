@@ -14,7 +14,12 @@ def get_db():
 def index():
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM bookings ORDER BY date, start_time")
+    cur.execute("""
+        SELECT bookings.*, rooms.confirmed
+        FROM bookings
+        JOIN rooms ON bookings.building = rooms.building AND bookings.room_number = rooms.room_number
+        ORDER BY bookings.date, bookings.start_time
+    """)
     bookings = cur.fetchall()
     conn.close()
     return render_template("index.html", bookings=bookings)
