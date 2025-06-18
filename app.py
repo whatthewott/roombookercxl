@@ -191,9 +191,9 @@ def search():
             query += """
                 AND room_number NOT IN (
                     SELECT room_number FROM bookings
-                    WHERE date = %s
+                    WHERE date = %s::date
                     AND (
-                        (%s < end_time AND %s > start_time)
+                        (%s::time < end_time AND %s::time > start_time)
                     )
                 )
             """
