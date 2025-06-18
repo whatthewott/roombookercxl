@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for, abort, jsonify
 import psycopg2
 import os
 
