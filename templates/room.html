@@ -3,23 +3,30 @@
 {% block content %}
   <div class="card shadow-sm">
     <div class="card-body">
-      <h2 class="card-title mb-4">Room {{ room[2] }} in {{ room[1] }}</h2>
+        <h2 class="card-title mb-4">Room {{ room[2] }} in {{ room[1] }}</h2>
 
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Room ID:</strong> {{ room[0] }}</li>
-        <li class="list-group-item"><strong>Building:</strong> {{ room[1] }}</li>
-        <li class="list-group-item"><strong>Room Number:</strong> {{ room[2] }}</li>
-        <li class="list-group-item">
-          <strong>Confirmed:</strong>
-          <span class="{{ 'text-success' if room[3]|lower == 't' else 'text-danger' }}">
-            {{ 'Yes' if room[3]|lower == 't' else 'No' }}
-          </span>
-        </li>
-        <li class="list-group-item"><strong>Capacity:</strong> {{ room[4] }}</li>
-        <li class="list-group-item"><strong>Features:</strong> {{ room[5] or 'None' }}</li>
-      </ul>
+        <div class="d-flex align-items-start">
+            <ul class="list-group list-group-flush flex-grow-1 me-4" style="min-width: 300px;">
+            <li class="list-group-item"><strong>Room ID:</strong> {{ room[0] }}</li>
+            <li class="list-group-item"><strong>Building:</strong> {{ room[1] }}</li>
+            <li class="list-group-item"><strong>Room Number:</strong> {{ room[2] }}</li>
+            <li class="list-group-item">
+                <strong>Confirmed:</strong>
+                <span class="{{ 'text-success' if room[3]|lower == 't' else 'text-danger' }}">
+                {{ 'Yes' if room[3]|lower == 't' else 'No' }}
+                </span>
+            </li>
+            <li class="list-group-item"><strong>Capacity:</strong> {{ room[4] }}</li>
+            <li class="list-group-item"><strong>Features:</strong> {{ room[5] or 'None' }}</li>
+            </ul>
 
-      <a href="/search" class="btn btn-secondary mt-4">Back to Search</a>
+            <img src="{{ url_for('static', filename='room_images/' + room[1] + '_' + room[2] + '.jpg') }}" 
+                alt="Room {{ room[2] }} photo" 
+                class="img-thumbnail" 
+                style="max-width: 300px; max-height: 300px; object-fit: cover;">
+        </div>
+
+        <a href="/search" class="btn btn-secondary mt-4">Back to Search</a>
     </div>
   </div>
 

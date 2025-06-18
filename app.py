@@ -220,6 +220,8 @@ def view_room(building, room_number):
         conn.close()
         return "Room not found", 404
 
+    image_filename = room[6] if len(room) > 6 and room[6] else f"{building}_{room_number}.jpg"
+
     # Get future bookings for this room
     cur.execute("""
         SELECT date, start_time, end_time, employer, event_type
@@ -230,7 +232,7 @@ def view_room(building, room_number):
     future_bookings = cur.fetchall()
 
     conn.close()
-    return render_template("room.html", room=room, future_bookings=future_bookings)
+    return render_template("room.html", room=room, future_bookings=future_bookings, image_filename=image_filename)
 
 if __name__ == "__main__":
     app.run(debug=True)
