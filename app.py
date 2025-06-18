@@ -135,18 +135,24 @@ def run_sql():
         </form>
     '''
 
-@app.route("/confirm/<string:building>/<string:room_number>", methods=["POST"])
-def confirm_room(building, room_number):
+@app.route("/toggle_confirm/<string:building>/<int:room_number>", methods=["POST"])
+def toggle_confirm(building, room_number):
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("""
-        UPDATE rooms
-        SET confirmed = TRUE
-        WHERE building = %s AND room_number = %s
-    """, (building, room_number))
+    cur.execute("SELECT confirmed FROM rooms WHERE building = %s AND room_number = %s", (building, room_number))
+    result = cur.fetchone()
+    if not result:
+        conn.close()
+        return jsonify({"error": "Room not found"}), 404
+
+    current_status = result[0]
+    new_status = not current_status
+
+    cur.execute("UPDATE rooms SET confirmed = %s WHERE building = %s AND room_number = %s",
+                (new_status, building, room_number))
     conn.commit()
     conn.close()
-    return redirect(url_for("index"))
+    return jsonify({"confirmed": new_status})
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -14,7 +14,7 @@
         <th>Room</th>
         <th>Employer</th>
         <th>Event Type</th>
-        <th>Action</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -25,25 +25,22 @@
         <td>{{ booking[7] }}</td>
         <td>{{ booking[2] }}</td>
         <td>
-          <span class="{{ 'text-success' if booking[-1] == 'TRUE' else 'text-danger' }}">
+          <span id="room-span-{{ booking[2] }}-{{ booking[3] }}" class="{{ 'text-success' if booking[-1]|lower == 't' else 'text-danger' }}">
             {{ booking[3] }}
           </span>
         </td>
         <td>{{ booking[4] }}</td>
         <td>{{ booking[5] }}</td>
-        <td>
+        <td class="text-nowrap">
           <form action="/delete/{{ booking[0] }}" method="POST" onsubmit="return confirm('Delete this booking?');">
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            <button type="submit" class="btn btn-danger btn-sm me-1">Delete</button>
           </form>
-        </td>
-        <td>
-          {% if booking[-1]|lower != 't' %}
-            <form method="POST" action="/confirm/{{ booking[1] }}/{{ booking[2] }}" style="display:inline;">
-              <button type="submit" class="btn btn-sm btn-outline-primary">Confirm</button>
-            </form>
-          {% else %}
-            <span class="text-muted">✔ Confirmed</span>
-          {% endif %}
+          <button 
+            id="btn-{{ booking[2] }}-{{ booking[3] }}"
+            class="btn btn-sm {% if booking[-1]|lower == 't' %}btn-outline-secondary{% else %}btn-outline-success{% endif %}"
+            onclick="toggleConfirm('{{ booking[2] }}', '{{ booking[3] }}')">
+            {% if booking[-1]|lower == 't' %}Unconfirm{% else %}Confirm{% endif %}
+          </button>
         </td>
       </tr>
       {% endfor %}
@@ -52,6 +49,32 @@
   {% else %}
     <p>No bookings found.</p>
   {% endif %}
+  <script>
+    function toggleConfirm(building, room) {
+      const btn = document.getElementById(`btn-${building}-${room}`);
+      const span = document.getElementById(`room-span-${building}-${room}`);
+      const row = btn.closest("tr");
+
+      fetch(`/toggle_confirm/${building}/${room}`, {
+        method: "POST"
+      })
+      .then(res => res.json())
+      .then(data => {
+        const confirmed = data.confirmed;
+
+        btn.textContent = confirmed ? "Unconfirm" : "Confirm";
+        btn.className = `btn btn-sm ${confirmed ? "btn-outline-secondary" : "btn-outline-success"}`;
+        span.className = confirmed ? "text-success" : "text-danger";
+
+        row.classList.add("table-warning");
+        setTimeout(() => row.classList.remove("table-warning"), 300);
+      })
+      .catch(err => {
+        alert("Error toggling confirmation.");
+        console.error(err);
+      });
+    }
+  </script>
 {% endblock %}
 
 
