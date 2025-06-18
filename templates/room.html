@@ -1,27 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Room Details</h2>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title mb-4">Room {{ room[2] }} in {{ room[1] }}</h2>
 
-  <table class="table table-bordered">
-    <tr>
-      <th>Building</th>
-      <td>{{ room[1] }}</td>
-    </tr>
-    <tr>
-      <th>Room Number</th>
-      <td>{{ room[2] }}</td>
-    </tr>
-    <tr>
-      <th>Confirmed</th>
-      <td>
-        <span class="{{ 'text-success' if room[2]|lower == 't' else 'text-danger' }}">
-          {{ 'Yes' if room[2]|lower == 't' else 'No' }}
-        </span>
-      </td>
-    </tr>
-    <!-- Add more fields here if you have them in the rooms table -->
-  </table>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Room ID:</strong> {{ room[0] }}</li>
+        <li class="list-group-item"><strong>Building:</strong> {{ room[1] }}</li>
+        <li class="list-group-item"><strong>Room Number:</strong> {{ room[2] }}</li>
+        <li class="list-group-item">
+          <strong>Confirmed:</strong>
+          <span class="{{ 'text-success' if room[3]|lower == 't' else 'text-danger' }}">
+            {{ 'Yes' if room[3]|lower == 't' else 'No' }}
+          </span>
+        </li>
+        <li class="list-group-item"><strong>Capacity:</strong> {{ room[4] }}</li>
+        <li class="list-group-item"><strong>Features:</strong> {{ room[5] or 'None' }}</li>
+      </ul>
 
-  <a href="{{ url_for('search') }}" class="btn btn-secondary">Back to Search</a>
+      <a href="/search" class="btn btn-secondary mt-4">Back to Search</a>
+    </div>
+  </div>
 {% endblock %}
