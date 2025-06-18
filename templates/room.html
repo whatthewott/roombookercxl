@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Room Details</h2>
+
+  <table class="table table-bordered">
+    <tr>
+      <th>Building</th>
+      <td>{{ room[0] }}</td>
+    </tr>
+    <tr>
+      <th>Room Number</th>
+      <td>{{ room[1] }}</td>
+    </tr>
+    <tr>
+      <th>Confirmed</th>
+      <td>
+        <span class="{{ 'text-success' if room[2]|lower == 't' else 'text-danger' }}">
+          {{ 'Yes' if room[2]|lower == 't' else 'No' }}
+        </span>
+      </td>
+    </tr>
+    <!-- Add more fields here if you have them in the rooms table -->
+  </table>
+
+  <a href="{{ url_for('search') }}" class="btn btn-secondary">Back to Search</a>
+{% endblock %}

@@ -207,5 +207,18 @@ def search():
     conn.close()
     return render_template("search.html", buildings=buildings, rooms=rooms)
 
+@app.route("/room/<string:building>/<string:room_number>")
+def view_room(building, room_number):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM rooms WHERE building = %s AND room_number = %s", (building, room_number))
+    room = cur.fetchone()
+    conn.close()
+
+    if not room:
+        return "Room not found", 404
+
+    return render_template("room.html", room=room)
+
 if __name__ == "__main__":
     app.run(debug=True)

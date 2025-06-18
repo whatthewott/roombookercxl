@@ -43,21 +43,27 @@
     <table class="table table-bordered table-striped mt-3">
       <thead class="table-dark">
         <tr>
-          <th>Building</th>
-          <th>Room Number</th>
-          <th>Confirmed</th>
+            <th>Building</th>
+            <th>Room Number</th>
+            <th>Confirmed</th>
+            <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {% for room in rooms %}
         <tr>
-          <td>{{ room[0] }}</td> <!-- building -->
-          <td>{{ room[1] }}</td> <!-- room_number -->
-          <td>
+            <td>{{ room[1] }}</td> <!-- building -->
+            <td>{{ room[0] }}</td> <!-- room_number -->
+            <td>
             <span class="{{ 'text-success' if room[2]|lower == 't' else 'text-danger' }}">
-              {{ 'Yes' if room[2]|lower == 't' else 'No' }}
+                {{ 'Yes' if room[2]|lower == 't' else 'No' }}
             </span>
-          </td>
+            </td>
+            <td>
+            <a href="{{ url_for('view_room', building=room[0], room_number=room[1]) }}" class="btn btn-sm btn-primary">
+                View Room
+            </a>
+            </td>
         </tr>
         {% endfor %}
       </tbody>
