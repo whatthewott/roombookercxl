@@ -22,4 +22,32 @@
       <a href="/search" class="btn btn-secondary mt-4">Back to Search</a>
     </div>
   </div>
+
+   {% if future_bookings %}
+    <h4 class="mt-5">Upcoming Bookings</h4>
+    <table class="table table-bordered table-sm mt-3">
+      <thead class="table-light">
+        <tr>
+          <th>Date</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Employer</th>
+          <th>Event Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in future_bookings %}
+        <tr>
+          <td>{{ b[0] }}</td>
+          <td>{{ b[1] }}</td>
+          <td>{{ b[2] }}</td>
+          <td>{{ b[3] }}</td>
+          <td>{{ b[4] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="mt-4 text-muted">No upcoming bookings for this room.</p>
+  {% endif %}
 {% endblock %}

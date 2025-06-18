@@ -1,4 +1,4 @@
-
+from datetime import date 
 from flask import Flask, render_template, request, redirect, url_for, abort, jsonify
 import psycopg2
 import os
@@ -211,14 +211,26 @@ def search():
 def view_room(building, room_number):
     conn = get_db()
     cur = conn.cursor()
+
+    # Get room details
     cur.execute("SELECT * FROM rooms WHERE building = %s AND room_number = %s", (building, room_number))
     room = cur.fetchone()
-    conn.close()
 
     if not room:
+        conn.close()
         return "Room not found", 404
 
-    return render_template("room.html", room=room)
+    # Get future bookings for this room
+    cur.execute("""
+        SELECT date, start_time, end_time, employer, event_type
+        FROM bookings
+        WHERE building = %s AND room_number = %s AND date >= %s
+        ORDER BY date, start_time
+    """, (building, room_number, date.today()))
+    future_bookings = cur.fetchall()
+
+    conn.close()
+    return render_template("room.html", room=room, future_bookings=future_bookings)
 
 if __name__ == "__main__":
     app.run(debug=True)
