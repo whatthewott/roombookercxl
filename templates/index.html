@@ -25,7 +25,7 @@
         <td>{{ booking[7] }}</td>
         <td>{{ booking[2] }}</td>
         <td>
-          <span class="{{ 'text-success' if booking[-1] == 'Yes' else 'text-danger' }}">
+          <span class="{{ 'text-success' if booking[-1] == 'TRUE' else 'text-danger' }}">
             {{ booking[3] }}
           </span>
         </td>
@@ -35,6 +35,15 @@
           <form action="/delete/{{ booking[0] }}" method="POST" onsubmit="return confirm('Delete this booking?');">
             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
           </form>
+        </td>
+        <td>
+          {% if booking[-1]|lower != 't' %}
+            <form method="POST" action="/confirm/{{ booking[1] }}/{{ booking[2] }}" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-outline-primary">Confirm</button>
+            </form>
+          {% else %}
+            <span class="text-muted">✔ Confirmed</span>
+          {% endif %}
         </td>
       </tr>
       {% endfor %}

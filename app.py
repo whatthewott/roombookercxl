@@ -135,5 +135,18 @@ def run_sql():
         </form>
     '''
 
+@app.route("/confirm/<string:building>/<string:room_number>", methods=["POST"])
+def confirm_room(building, room_number):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE rooms
+        SET confirmed = TRUE
+        WHERE building = %s AND room_number = %s
+    """, (building, room_number))
+    conn.commit()
+    conn.close()
+    return redirect(url_for("index"))
+
 if __name__ == "__main__":
     app.run(debug=True)
