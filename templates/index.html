@@ -49,32 +49,6 @@
   {% else %}
     <p>No bookings found.</p>
   {% endif %}
-  <script>
-    function toggleConfirm(building, room) {
-      const btn = document.getElementById(`btn-${building}-${room}`);
-      const span = document.getElementById(`room-span-${building}-${room}`);
-      const row = btn.closest("tr");
-
-      fetch(`/toggle_confirm/${building}/${room}`, {
-        method: "POST"
-      })
-      .then(res => res.json())
-      .then(data => {
-        const confirmed = data.confirmed;
-
-        btn.textContent = confirmed ? "Unconfirm" : "Confirm";
-        btn.className = `btn btn-sm ${confirmed ? "btn-outline-secondary" : "btn-outline-success"}`;
-        span.className = confirmed ? "text-success" : "text-danger";
-
-        row.classList.add("table-warning");
-        setTimeout(() => row.classList.remove("table-warning"), 300);
-      })
-      .catch(err => {
-        alert("Error toggling confirmation.");
-        console.error(err);
-      });
-    }
-  </script>
 {% endblock %}
 
 
