@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2 class="mb-4">Search Rooms</h2>
+
+  <form method="POST" class="needs-validation" novalidate>
+    <div class="mb-3">
+      <label for="building" class="form-label">Building</label>
+      <select class="form-select" id="building" name="building">
+        <option value="">All Buildings</option>
+        {% for b in buildings %}
+          <option value="{{ b }}" {% if b == request.form.get('building') %}selected{% endif %}>{{ b }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="room_number" class="form-label">Room Number</label>
+      <input type="text" class="form-control" id="room_number" name="room_number" value="{{ request.form.get('room_number', '') }}">
+    </div>
+
+    <div class="mb-3">
+      <label for="date" class="form-label">Date (for availability)</label>
+      <input type="date" class="form-control" id="date" name="date" value="{{ request.form.get('date', '') }}">
+    </div>
+
+    <div class="row">
+      <div class="col mb-3">
+        <label for="start_time" class="form-label">Start Time</label>
+        <input type="time" class="form-control" id="start_time" name="start_time" step="300" value="{{ request.form.get('start_time', '') }}">
+      </div>
+      <div class="col mb-3">
+        <label for="end_time" class="form-label">End Time</label>
+        <input type="time" class="form-control" id="end_time" name="end_time" step="300" value="{{ request.form.get('end_time', '') }}">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  {% if rooms %}
+    <h3 class="mt-5">Search Results</h3>
+    <table class="table table-bordered table-striped mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Building</th>
+          <th>Room Number</th>
+          <th>Confirmed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for room in rooms %}
+        <tr>
+          <td>{{ room[0] }}</td> <!-- building -->
+          <td>{{ room[1] }}</td> <!-- room_number -->
+          <td>
+            <span class="{{ 'text-success' if room[2]|lower == 't' else 'text-danger' }}">
+              {{ 'Yes' if room[2]|lower == 't' else 'No' }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% elif request.method == "POST" %}
+    <p class="mt-4">No rooms found matching your criteria.</p>
+  {% endif %}
+{% endblock %}

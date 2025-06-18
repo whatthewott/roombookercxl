@@ -158,5 +158,54 @@ def toggle_confirm(building, room_number):
 
     return jsonify({"confirmed": new_status})
 
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    conn = get_db()
+    cur = conn.cursor()
+
+    # Get list of buildings for dropdown
+    cur.execute("SELECT DISTINCT building FROM rooms ORDER BY building")
+    buildings = [row[0] for row in cur.fetchall()]
+
+    rooms = []
+    if request.method == "POST":
+        room_number = request.form.get("room_number", "").strip()
+        building = request.form.get("building", "")
+        date = request.form.get("date", "")
+        start_time = request.form.get("start_time", "")
+        end_time = request.form.get("end_time", "")
+
+        # Build SQL query dynamically based on filters
+        query = "SELECT * FROM rooms WHERE 1=1"
+        params = []
+
+        if building:
+            query += " AND building = %s"
+            params.append(building)
+        if room_number:
+            query += " AND room_number ILIKE %s"
+            params.append(f"%{room_number}%")
+
+        if date and start_time and end_time:
+            # Exclude rooms that have bookings overlapping with given datetime
+            query += """
+                AND room_number NOT IN (
+                    SELECT room_number FROM bookings
+                    WHERE date = %s
+                    AND (
+                        (%s < end_time AND %s > start_time)
+                    )
+                )
+            """
+            params.extend([date, start_time, end_time])
+
+        query += " ORDER BY building, room_number"
+
+        cur.execute(query, params)
+        rooms = cur.fetchall()
+
+    conn.close()
+    return render_template("search.html", buildings=buildings, rooms=rooms)
+
 if __name__ == "__main__":
     app.run(debug=True)
