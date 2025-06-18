@@ -224,7 +224,7 @@ def view_room(building, room_number):
     cur.execute("""
         SELECT date, start_time, end_time, employer, event_type
         FROM bookings
-        WHERE building = %s AND room_number = %s AND date >= %s
+        WHERE building = %s AND room_number = %s AND date >= %s::date
         ORDER BY date, start_time
     """, (building, room_number, date.today()))
     future_bookings = cur.fetchall()
