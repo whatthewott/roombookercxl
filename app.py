@@ -139,19 +139,23 @@ def run_sql():
 def toggle_confirm(building, room_number):
     conn = get_db()
     cur = conn.cursor()
+
+    # Get current confirmed status (as string)
     cur.execute("SELECT confirmed FROM rooms WHERE building = %s AND room_number = %s", (building, room_number))
     result = cur.fetchone()
     if not result:
         conn.close()
         return jsonify({"error": "Room not found"}), 404
 
-    current_status = result[0]
-    new_status = not current_status
+    current_status = result[0].lower() if result[0] else "false"
+    new_status = "false" if current_status in ["true", "t", "yes", "1"] else "true"
 
+    # Update to new status (as string)
     cur.execute("UPDATE rooms SET confirmed = %s WHERE building = %s AND room_number = %s",
                 (new_status, building, room_number))
     conn.commit()
     conn.close()
+
     return jsonify({"confirmed": new_status})
 
 if __name__ == "__main__":

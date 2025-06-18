@@ -37,9 +37,11 @@
           </form>
           <button 
             id="btn-{{ booking[2] }}-{{ booking[3] }}"
-            class="btn btn-sm {% if booking[-1]|lower == 't' %}btn-outline-secondary{% else %}btn-outline-success{% endif %}"
+            class="btn btn-sm toggle-btn {% if booking[-1]|lower in ['true', 't'] %}active{% endif %}"
             onclick="toggleConfirm('{{ booking[2] }}', '{{ booking[3] }}')">
-            {% if booking[-1]|lower == 't' %}Unconfirm{% else %}Confirm{% endif %}
+            <span class="fade-text">
+              {% if booking[-1]|lower in ['true', 't'] %}Confirmed{% else %}Unconfirmed{% endif %}
+            </span>
           </button>
         </td>
       </tr>
